@@ -1,3 +1,6 @@
+
+import geomerative.*;
+
 //1024x768, 1536x1152, 2048x1536
 int w = 2048, h = 1536;
 PGraphics pg, sgram;
@@ -6,23 +9,45 @@ float DPI = 191.0;
 //float DPI = 103.2;
 float mu = 1/3.0;
 int ctr = 0;
-float scaling = 3.0;
+float scaling = 2.0;
 Boolean debug = false;
 PFont my_font;
 float far;
 int conv_rad = 20; //convergence circle radius
 float conv_ypos = 3.0/4;
-//Boolean pg_sphere = false;
-Boolean pg_sphere = true;
+Boolean pg_sphere = false;
+//Boolean pg_sphere = true;
+float start_h;
 
+
+
+String[] texts = {"STEAMED", "HAMS"};
+
+RShape[] grp = new RShape[texts.length];
+RExtrudedMesh[] em = new RExtrudedMesh[texts.length];
 void setup()
 {
-  //size(1536, 1152, P3D);
-  size(2048,1536, P3D);
+  //size(1024,768,P3D);
+  size(1536, 1152, P3D);
+  //size(2048,1536, P3D);
   pg = createGraphics(int(width/scaling), int(height/scaling),P3D);
   sgram = createGraphics(int(width/scaling), int(height/scaling),P3D);
   far = get_sep(0);
   frameRate(10);
+  
+    RG.init(this);
+    for(int i = 0; i < grp.length; i++)
+    grp[i] = RG.getText(texts[i], "DejaVuSansMono-Bold.ttf", int(360/scaling), CENTER);
+  RG.setPolygonizer(RG.UNIFORMLENGTH);
+  RG.setPolygonizerLength(1);
+  
+   smooth();
+   for(int i = 0; i < em.length; i++)
+  em[i] = new RExtrudedMesh(grp[i], 12.5, pg);
+  
+  start_h = pg.height/float(em.length);
+  
+ 
   
 }
 
@@ -52,21 +77,35 @@ void draw()
 void pg_draw()
 {
  pg.beginDraw();
- pg.background(0);
  pg.noStroke();
  pg.lights();
  if(pg_sphere)
  {
+    pg.background(0);
    pg.translate(pg.width/2.0,pg.height/2.0, 0);
     pg.sphere(250/scaling);
  }
  else
  {
- pg.translate(pg.width/2.0,pg.height/2.0);
+   
+    pg.background(150);
+ pg.translate(pg.width/2.0,5.0*start_h/6, 0);
+ pg.fill(255);
+ for(int i = 0; i < em.length; i++)
+ {
+    em[i].draw();
+    pg.translate(0, 2.0*start_h/3.0, 0);
+ };
+ 
+ /*
+ pg.background(125);
+ pg.translate(pg.width/2.0,pg.height/2.0, 0);
  pg.textSize(int(250/scaling));
  pg.textAlign(CENTER, CENTER);
  pg.text("Z H I H A O",0,0);
- };
+*/
+//em.draw();
+};
  
  pg.endDraw();
  
@@ -180,7 +219,7 @@ void mouseReleased()
 
 int get_e()
 {
- return round(2.5*DPI); 
+ return round(2.5*DPI/scaling); 
 }
 
 int get_sep(float z)
