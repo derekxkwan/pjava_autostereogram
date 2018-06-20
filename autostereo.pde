@@ -1,7 +1,7 @@
 
 import geomerative.*;
 
-//1024x768, 1536x1152, 2048x1536
+//1024x768, 1536x1152, 2048x1536, 2560x1440
 int w = 2048, h = 1536;
 PGraphics pg, sgram;
 PImage disp;
@@ -9,7 +9,7 @@ float DPI = 191.0;
 //float DPI = 103.2;
 float mu = 1/3.0;
 int ctr = 0;
-float scaling = 2.0;
+float scaling = 3.0;
 Boolean debug = false;
 PFont my_font;
 float far;
@@ -18,10 +18,10 @@ float conv_ypos = 3.0/4;
 Boolean pg_sphere = false;
 //Boolean pg_sphere = true;
 float start_h;
+Boolean new_frame = true;
+float font_scale = 0.7;
 
-
-
-String[] texts = {"STEAMED", "HAMS"};
+String[] texts = {"MODEL", "MINORITY"};
 
 RShape[] grp = new RShape[texts.length];
 RExtrudedMesh[] em = new RExtrudedMesh[texts.length];
@@ -37,7 +37,7 @@ void setup()
   
     RG.init(this);
     for(int i = 0; i < grp.length; i++)
-    grp[i] = RG.getText(texts[i], "DejaVuSansMono-Bold.ttf", int(360/scaling), CENTER);
+      grp[i] = RG.getText(texts[i], "DejaVuSansMono-Bold.ttf", int(360*font_scale/scaling), CENTER);
   RG.setPolygonizer(RG.UNIFORMLENGTH);
   RG.setPolygonizerLength(1);
   
@@ -54,24 +54,8 @@ void setup()
 void draw()
 {
 
-  pg_draw();
- // println("pgdraw done");
-  if(!debug)
-  {
-    autost_gen(pg);
-  //println("sgdraw done");
-  disp = sgram.get();
-  disp.resize(width,height);
-  }
-  else
-  {
-     disp = pg.get();
-     disp.resize(width,height);
-  };
-  image(disp,0, 0);
-  //println(ctr);
-  ctr++;
-  //filter(GRAY);
+  if(new_frame == true) draw_autost();
+ 
 }
 
 void pg_draw()
@@ -109,6 +93,30 @@ void pg_draw()
  
  pg.endDraw();
  
+}
+
+void draw_autost()
+{
+
+   pg_draw();
+ // println("pgdraw done");
+  if(!debug)
+  {
+    autost_gen(pg);
+  //println("sgdraw done");
+  disp = sgram.get();
+  disp.resize(width,height);
+  }
+  else
+  {
+     disp = pg.get();
+     disp.resize(width,height);
+  };
+  image(disp,0, 0);
+  //println(ctr);
+  ctr++;
+  //filter(GRAY);
+  new_frame = false;
 }
 
 void autost_gen(PImage src)
@@ -206,6 +214,7 @@ void autost_gen(PImage src)
 
 void mousePressed()
 {
+  new_frame = true;
   debug = true;
   //print(mouseX + ", " + mouseY + ": ");
   //print(brightness(pg.pixels[mouseX + (pg.width * mouseY)]) + "\n");
@@ -214,7 +223,8 @@ void mousePressed()
 
 void mouseReleased()
 {
-   debug = false; 
+   debug = false;
+   new_frame = true;
 }
 
 int get_e()
