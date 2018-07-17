@@ -3,6 +3,7 @@ import geomerative.*;
 
 //1024x768, 1536x1152, 2048x1536, 2560x1440
 int w = 2048, h = 1536;
+float[] baseColor = {1.0, 1.0, 1.0}; //normalized
 PGraphics pg, sgram;
 PImage disp;
 float DPI = 191.0;
@@ -18,7 +19,7 @@ float conv_ypos = 3.0/4;
 Boolean pg_sphere = false;
 //Boolean pg_sphere = true;
 float start_h;
-Boolean new_frame = true;
+Boolean new_frame = false;
 float font_scale = 0.7;
 
 String[] texts = {"MODEL", "MINORITY"};
@@ -196,9 +197,12 @@ void autost_gen(PImage src)
     
     for(int x = ret_w - 1; x >= 0; x--)
     {
+      float cur;
+      
       if( same[x] == x) pix[x] = int(random(206)) + 50;
       else pix[x] = pix[same[x]];
-      sgram.pixels[x + (ret_w * y)] = color(pix[x]);
+      cur = pix[x];
+      sgram.pixels[x + (ret_w * y)] = color(baseColor[0] * cur, baseColor[1] * cur, baseColor[2] * cur);
     };
   };
   sgram.updatePixels();
