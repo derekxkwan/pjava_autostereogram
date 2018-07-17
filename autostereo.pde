@@ -9,10 +9,11 @@ float sum_thresh = 2.25; //threshold components of base_color should sum up to
 PGraphics pg, sgram;
 PImage disp;
 float DPI = 191.0;
+float pg_bg = 165;
 //float DPI = 103.2;
 float mu = 1/3.0;
 int ctr = 0;
-float scaling = 3.0;
+float scaling = 3.5;
 Boolean debug = false;
 PFont my_font;
 float far;
@@ -22,9 +23,9 @@ Boolean pg_sphere = false;
 //Boolean pg_sphere = true;
 float start_h;
 Boolean new_frame = false;
-float font_scale = 0.7;
 
-String[] texts = {"MODEL", "MINORITY"};
+
+String[] texts = {"MODEL", "MINORITY"}; float font_scale = 0.7;
 
 RShape[] grp = new RShape[texts.length];
 RExtrudedMesh[] em = new RExtrudedMesh[texts.length];
@@ -75,7 +76,7 @@ void pg_draw()
  else
  {
    
-    pg.background(150);
+    pg.background(pg_bg);
  pg.translate(pg.width/2.0,5.0*start_h/6, 0);
  pg.fill(255);
  for(int i = 0; i < em.length; i++)
