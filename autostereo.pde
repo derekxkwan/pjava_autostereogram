@@ -3,7 +3,9 @@ import geomerative.*;
 
 //1024x768, 1536x1152, 2048x1536, 2560x1440
 int w = 2048, h = 1536;
-float[] baseColor = {1.0, 1.0, 1.0}; //normalized
+float[] base_color = new float[3]; //normalized
+float sum_thresh = 2.25; //threshold components of base_color should sum up to
+
 PGraphics pg, sgram;
 PImage disp;
 float DPI = 191.0;
@@ -48,7 +50,7 @@ void setup()
   
   start_h = pg.height/float(em.length);
   
- 
+ randomize_color();
   
 }
 
@@ -202,7 +204,7 @@ void autost_gen(PImage src)
       if( same[x] == x) pix[x] = int(random(206)) + 50;
       else pix[x] = pix[same[x]];
       cur = pix[x];
-      sgram.pixels[x + (ret_w * y)] = color(baseColor[0] * cur, baseColor[1] * cur, baseColor[2] * cur);
+      sgram.pixels[x + (ret_w * y)] = color(base_color[0] * cur, base_color[1] * cur, base_color[2] * cur);
     };
   };
   sgram.updatePixels();
@@ -240,4 +242,21 @@ int get_sep(float z)
 {
   
  return round((1.0 - mu * z)*get_e()/(2.0- mu * z)); 
+}
+
+
+void randomize_color()
+{
+  float sum = 0;
+  while(sum < sum_thresh)
+  {
+    sum = 0;
+    for(int i = 0; i < base_color.length; i++)
+    {
+      float cur_random = random(1);
+      base_color[i] = cur_random;
+      sum += cur_random;
+    };
+    
+  };
 }
