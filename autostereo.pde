@@ -188,6 +188,7 @@ void autost_gen(PImage src)
             if( k < right) left = k;
             else
             {
+              same[left] = right;
               left = right;
               right = k;
             };
